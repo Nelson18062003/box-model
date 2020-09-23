@@ -320,6 +320,7 @@ footer {
     position: relative;
     color: white;
     margin-top: 40px;
+
 }
 
 .footer-container {
@@ -419,6 +420,14 @@ footer {
     color: white;
 }
 
+.curved-div {
+    position: relative;
+    background: #ff3c00;
+    color: #FFF;
+    text-align: center;
+    overflow: hidden;
+    margin: 0;
+}
 
 .curved-div svg {
     display: block;
