@@ -53,7 +53,8 @@
           "id": "QadzahQ1h7wOb4CD",
           "name": "Google Sheets account 3"
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "parameters": {
@@ -611,7 +612,7 @@
       "parameters": {
         "sendTo": "nelson.ngangonsoh@skillandyou.com",
         "subject": "=[Transfert B2B → B2C] Leads identifies le {{ $now.format('dd/MM/yyyy') }}",
-        "message": "=Bonjour,<br><br>\nVous trouverez ci-joint le fichier CSV contenant les leads B2B identifies aujourd'hui souhaitant une formation initiale.<br><br>\nMerci de l'importer dans Novadis.<br><br>\nBonne journee,<br>\nAutomatisation B2B → B2C",
+        "message": "=Bonjour Nelson,<br><br>\nVous trouverez ci-joint le fichier CSV contenant les leads B2B identifiés aujourd'hui souhaitant une formation initiale.<br><br>\nMerci de l'importer dans Novadis.<br><br>\nBonne journée,<br>\nAutomatisation B2B → B2C",
         "options": {
           "attachmentsUi": {
             "attachmentsBinary": [
