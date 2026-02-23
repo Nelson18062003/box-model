@@ -1,0 +1,835 @@
+{
+  "name": "Transfert automatique → B2C (Candidat formation initiale)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 16,
+              "triggerAtMinute": 20
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -464,
+        -64
+      ],
+      "id": "60ab307c-7ecd-4f73-815a-020f23b26ce8",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "nelson.ngangonsoh@skillandyou.com",
+        "subject": "=[Transfert B2B → B2C] Leads identifiés aujourd’hui",
+        "message": "=Bonjour Angélique, Anaïs,<br><br>\nVous trouverez ci-joint le fichier CSV contenant les leads B2B identifiés aujourd’hui souhaitant une formation initiale.<br><br>\nMerci de l’importer dans Novadis.<br><br>\nBonne journée,<br>\nAutomatisation B2B → B2C",
+        "options": {
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        4560,
+        -448
+      ],
+      "id": "365293ce-a8d8-429f-b3cf-884d960cf2bf",
+      "name": "Send a message",
+      "webhookId": "cead47c2-a64f-49ca-a86f-ac27fbec51b9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "o0zR7wupxxmuuaf3",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "includeTime": false,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        -544
+      ],
+      "id": "38f6ba76-1a62-4e76-8839-d33438061052",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "dbe7df92-0345-42a0-acc4-5adcbd7feda3",
+              "leftValue": "={{ $json['Date de transfer vers B2C'] }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        464,
+        -336
+      ],
+      "id": "317e16aa-e028-4457-9972-87d45a29fae9",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4",
+          "mode": "list",
+          "cachedResultName": "Mapping Formation CFA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 58518804,
+          "mode": "list",
+          "cachedResultName": "PROCESSED_B2C",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4/edit#gid=58518804"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "E-mail": "={{ $('Get row(s) in sheet').item.json['E-mail'] }}",
+            "Nom": "={{ $('Get row(s) in sheet').item.json.Nom }}",
+            "Prénom": "={{ $('Get row(s) in sheet').item.json['Prénom'] }}",
+            "Numéro de téléphone": "={{ $('Get row(s) in sheet').item.json['Numéro de téléphone'] }}",
+            "Civilité": "={{ $('Get row(s) in sheet').item.json['Civilité'] }}",
+            "Formation demandée (Code B2B)": "={{ $('Get row(s) in sheet').item.json['Formation demandée (Code B2B)'] }}",
+            "Secteur S&Y": "={{ $('Get row(s) in sheet').item.json['Secteur S&Y'] }}",
+            "ID de fiche d'informations Hubspot": "={{ $('Get row(s) in sheet').item.json['ID de fiche d\\'informations Hubspot'] }}",
+            "Processed_at": "={{ $('Get row(s) in sheet').item.json.Processed_at }}",
+            "ens ": "={{ $('Get row(s) in sheet').item.json['ens '] }}",
+            "parurl ": "={{ $('Get row(s) in sheet').item.json['parurl '] }}",
+            "Date de creation": "={{ $('Get row(s) in sheet').item.json['Date de creation'] }}",
+            "Date de transfer vers B2C": "={{ $today }}",
+            "Code formation B2C": "={{ $('Get row(s) in sheet').item.json['Code formation B2C'] }}",
+            "nom_formation_base": "={{ $('Get row(s) in sheet').item.json.nom_formation_base }}",
+            "db_name": "={{ $('Get row(s) in sheet').item.json.db_name }}"
+          },
+          "matchingColumns": [
+            "E-mail"
+          ],
+          "schema": [
+            {
+              "id": "Nom",
+              "displayName": "Nom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prénom",
+              "displayName": "Prénom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "E-mail",
+              "displayName": "E-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Numéro de téléphone",
+              "displayName": "Numéro de téléphone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Civilité",
+              "displayName": "Civilité",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Formation demandée (Code B2B)",
+              "displayName": "Formation demandée (Code B2B)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Secteur S&Y",
+              "displayName": "Secteur S&Y",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ID de fiche d'informations Hubspot",
+              "displayName": "ID de fiche d'informations Hubspot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Processed_at",
+              "displayName": "Processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ens ",
+              "displayName": "ens ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "parurl ",
+              "displayName": "parurl ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date de creation",
+              "displayName": "Date de creation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date de transfer vers B2C",
+              "displayName": "Date de transfer vers B2C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Code formation B2C",
+              "displayName": "Code formation B2C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "nom_formation_base",
+              "displayName": "nom_formation_base",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "db_name",
+              "displayName": "db_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1984,
+        -48
+      ],
+      "id": "8fdff5f1-ce2b-46c6-b1fe-d6d2c262c8a8",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QadzahQ1h7wOb4CD",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Récupération du champ avec fallback\nconst raw = $json['Numéro de téléphone'];\n\n\n// Si pas de numéro → retourner un champ vide\nif (!raw) {\n  return {\n    json: {\n      numero_formatte: \"\"\n    }\n  };\n}\n\n// Nettoyage : retirer tout sauf les chiffres\nlet digits = raw.toString().replace(/\\D+/g, \"\");\n\n// Cas 1 : commence par 33 (ex : 33745744591)\nif (digits.startsWith(\"33\")) {\n  digits = digits.substring(2); \n}\n\n// Cas 2 : commence par 330...\nif (digits.startsWith(\"330\")) {\n  digits = digits.substring(3);\n}\n\n// Cas 3 : commence par 0\nif (digits.startsWith(\"0\")) {\n  digits = digits.substring(1);\n}\n\n// Cas 4 : si trop court ou vide → invalide\nif (digits.length < 9) {\n  return {\n    json: {\n      numero_formatte: \"\"\n    }\n  };\n}\n\n// Ajout du +33 final\nconst final = \"+33\" + digits;\n\nreturn {\n  json: {\n    numero_formatte: final\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        912,
+        -800
+      ],
+      "id": "824b5c5a-1e92-4cc8-a93c-27ac19b5a2d1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Récupération sécurisée de la civilité depuis l'item\nconst civRaw = $('If').item.json['Civilité'] ;\n\n// Valeur finale\nlet civ;\n\n// Cas : monsieur\nif (civRaw === \"monsieur\" || civRaw === \"Monsieur\" || civRaw === \"mr\" || civRaw === \"m\") {\n  civ = \"M.\";\n}\n\n// Cas : madame\nelse if (civRaw === \"madame\" || civRaw === \"Madame\" || civRaw === \"mme\" || civRaw === \"m me\") {\n  civ = \"Mme\";\n}\n\n// Cas : vide ou valeur inconnue → par défaut Mme.\nelse {\n  civ = \"Mme\";\n}\n\nreturn {\n  json: {\n    civilite_formatee: civ\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1488,
+        -416
+      ],
+      "id": "cb5a0f08-6706-414d-bb52-9828d6934846",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4",
+          "mode": "list",
+          "cachedResultName": "Mapping Formation CFA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 58518804,
+          "mode": "list",
+          "cachedResultName": "PROCESSED_B2C",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4/edit#gid=58518804"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "E-mail": "={{ $json['E-mail'] }}",
+            "Date de transfer vers B2C": "={{ $json.date_transfert_formatee }}",
+            "Numéro de téléphone": "={{ $json['Numéro de téléphone'] }}",
+            "Civilité": "={{ $('Code in JavaScript1').item.json.civilite_formatee }}",
+            "Nom": "={{ $json.Nom }}",
+            "Prénom": "={{ $json['Prénom'] }}",
+            "Secteur S&Y": "={{ $json['Secteur S&Y'] }}",
+            "ID de fiche d'informations Hubspot": "={{ $json['ID de fiche d\\'informations Hubspot'] }}",
+            "Date de creation": "={{ $json.date_creation_formatee }}",
+            "ens ": "XX ",
+            "Formation demandée (Code B2B)": "={{ $json['Formation demandée (Code B2B)'] }}",
+            "Processed_at": "={{ $json.Processed_at }}",
+            "parurl ": "utm_source=hubspot&utm_medium=transfert",
+            "Code formation B2C": "={{ $json['Code formation B2C'] }}",
+            "nom_formation_base": "={{ $json.nom_formation_base }}",
+            "db_name": "={{ $json.db_name }}"
+          },
+          "matchingColumns": [
+            "E-mail"
+          ],
+          "schema": [
+            {
+              "id": "Nom",
+              "displayName": "Nom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prénom",
+              "displayName": "Prénom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "E-mail",
+              "displayName": "E-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Numéro de téléphone",
+              "displayName": "Numéro de téléphone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Civilité",
+              "displayName": "Civilité",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Formation demandée (Code B2B)",
+              "displayName": "Formation demandée (Code B2B)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Secteur S&Y",
+              "displayName": "Secteur S&Y",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ID de fiche d'informations Hubspot",
+              "displayName": "ID de fiche d'informations Hubspot",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Processed_at",
+              "displayName": "Processed_at",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "ens ",
+              "displayName": "ens ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "parurl ",
+              "displayName": "parurl ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date de creation",
+              "displayName": "Date de creation",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date de transfer vers B2C",
+              "displayName": "Date de transfer vers B2C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Code formation B2C",
+              "displayName": "Code formation B2C",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "nom_formation_base",
+              "displayName": "nom_formation_base",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "db_name",
+              "displayName": "db_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2752,
+        -128
+      ],
+      "id": "7b863a1b-c181-477e-b2bc-3bcbcd3e26c3",
+      "name": "Append or update row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QadzahQ1h7wOb4CD",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Petite fonction utilitaire pour formater une Date en \"JJ/MM/AAAA\"\nfunction formatDate(d) {\n  const day = String(d.getDate()).padStart(2, '0');\n  const month = String(d.getMonth() + 1).padStart(2, '0');\n  const year = d.getFullYear();\n  return `${day}/${month}/${year}`;\n}\n\n// 1️⃣ Traitement de \"Date de creation\" (timestamp HubSpot)\nlet dateCreationFormatee = '';\nconst rawCreation =$json['Date de creation'];\n\nif (rawCreation) {\n  let ts = Number(rawCreation);\n\n  // Si HubSpot renvoie des secondes (10 chiffres), on convertit en ms\n  if (ts < 1e11) {\n    ts = ts * 1000;\n  }\n\n  const d = new Date(ts);\n  if (!isNaN(d.getTime())) {\n    dateCreationFormatee = formatDate(d); // ex : \"04/12/2025\"\n  }\n}\n\n// 2️⃣ Traitement de \"Date de transfert vers B2C\" (ISO string)\nlet dateTransfertFormatee = '';\nconst rawTransfert = $json['Date de transfer vers B2C'];\n\nif (rawTransfert) {\n  const d2 = new Date(rawTransfert);\n  if (!isNaN(d2.getTime())) {\n    dateTransfertFormatee = formatDate(d2); // ex : \"04/12/2025\"\n  }\n}\n\n// On renvoie toutes les données d'origine + les deux nouveaux champs formatés\nreturn {\n  json: {\n    ...$json,\n    date_creation_formatee: dateCreationFormatee,\n    date_transfert_formatee: dateTransfertFormatee,\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2320,
+        -912
+      ],
+      "id": "76ef9738-d06a-41c4-a04f-6c80cbd1de1d",
+      "name": "fonction utilitaire pour formater une Date"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "49cbb811-d533-46b3-83f8-98d93d291db3",
+              "name": "pre",
+              "value": "={{ $json['Prénom'] }}",
+              "type": "string"
+            },
+            {
+              "id": "46489e59-fabc-47dd-9b8b-f5cff7474ad0",
+              "name": "nom",
+              "value": "={{ $json.Nom }}",
+              "type": "string"
+            },
+            {
+              "id": "b40a3351-dd0c-4a8c-8291-c953492a27ce",
+              "name": "civ",
+              "value": "={{ $json['Civilité'] }}",
+              "type": "string"
+            },
+            {
+              "id": "ea39c48f-0870-4530-8260-0976e537d13e",
+              "name": "ema",
+              "value": "={{ $json['E-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "a9234e8a-22ef-4696-8e91-d11c588c7226",
+              "name": "tel",
+              "value": "={{ $('Code in JavaScript').item.json.numero_formatte }}",
+              "type": "string"
+            },
+            {
+              "id": "4035c659-709f-4835-9eea-b9c0b1bf8eab",
+              "name": "ens ",
+              "value": "=XX",
+              "type": "string"
+            },
+            {
+              "id": "3298afaa-a02a-4165-b90c-e81ff62c065d",
+              "name": "fmt",
+              "value": "={{ $json['Code formation B2C'] }}",
+              "type": "string"
+            },
+            {
+              "id": "86e86a07-d120-4c43-b8a9-807a02aee823",
+              "name": "parurl",
+              "value": "utm_source=hubspot&utm_medium=transfert",
+              "type": "string"
+            },
+            {
+              "id": "0325c4f5-c91a-4ca1-8a98-c1feec06681e",
+              "name": "datpro",
+              "value": "={{ $json['Date de transfer vers B2C'] }}",
+              "type": "string"
+            },
+            {
+              "id": "bb4bf7e5-968b-4cdc-9029-006be483abd3",
+              "name": "idhub",
+              "value": "={{ $json['ID de fiche d\\'informations Hubspot'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3536,
+        -352
+      ],
+      "id": "9f013cf3-36f7-4e7e-b14b-1288855a5d09",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "binaryPropertyName": "=data",
+        "options": {
+          "delimiter": ";",
+          "fileName": "=leads_b2b_{{$now}}.csv",
+          "headerRow": true
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3744,
+        -352
+      ],
+      "id": "3c00db96-a01d-4a76-afb0-604ba6a861f9",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4",
+          "mode": "list",
+          "cachedResultName": "Mapping Formation CFA",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 58518804,
+          "mode": "list",
+          "cachedResultName": "PROCESSED_B2C",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/115qZE2TksAKcgm__MpZJ1KR957NOcQxwEehDRB-s5m4/edit#gid=58518804"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        160,
+        -64
+      ],
+      "id": "b550f533-703d-41ed-a1d6-b3656e6c180f",
+      "name": "Get row(s) in sheet",
+      "executeOnce": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QadzahQ1h7wOb4CD",
+          "name": "Google Sheets account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Append or update row in sheet": {
+      "main": [
+        [
+          {
+            "node": "fonction utilitaire pour formater une Date",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append or update row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fonction utilitaire pour formater une Date": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cda7e5dd-f7fa-403b-940d-62dd13f49e53",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7befc5cd978a3ca0b10dfde07dd54d5b328958a8fa3d1237a7569d73549e92a0"
+  },
+  "id": "oYp95mhKJjFJXXOx",
+  "tags": []
+}
